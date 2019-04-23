@@ -10,7 +10,7 @@ BatchedInput = collections.namedtuple('BatchedInput', ['initializer', 'source', 
 def get_iterator(src_dataset, tgt_dataset, src_vocab_table, tgt_vocab_table,  #得到遍历器
                  batch_size, sos, eos, reshuffle_each_iteration=True,
                  src_max_len=None, tgt_max_len=None):
-    src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)
+    src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)#找到结尾标记所对应的id
     tgt_sos_id = tf.cast(tgt_vocab_table.lookup(tf.constant(sos)), tf.int32)
     tgt_eos_id = tf.cast(tgt_vocab_table.lookup(tf.constant(eos)), tf.int32)
     output_buffer_size = batch_size * 1000
@@ -45,9 +45,9 @@ def get_iterator(src_dataset, tgt_dataset, src_vocab_table, tgt_vocab_table,  #�
 
     def key_func(unused_1, unused_2, unused_3, src_len, tgt_len):
         if src_max_len:
-            bucket_width = (src_max_len + 5 - 1) // 5 #看有多少个桶
+            bucket_width = (src_max_len + 5 - 1) // 5 #桶的宽度
         else:
-            bucket_width = 10     #分成10个桶
+            bucket_width = 10     #桶的宽度为10
         bucked_id = tf.maximum(src_len // bucket_width, tgt_len // bucket_width) #看看可以分在哪个桶里面
         return tf.to_int64(tf.minimum(5, bucked_id)) #返回同所在的索引
 
